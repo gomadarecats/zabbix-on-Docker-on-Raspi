@@ -1,4 +1,9 @@
+### build
+- must be set build-arg ZBXPASSWD
 ```
-docker run -d -p 80:8080 -e "ZBXPASS=<PASSWORD> " tag/image
+docker build --build-arg ZBXPASSWD=<PASSWORD> -t tag/image .
 ```
-- take few time to create database.
+### run
+```
+docker run -d -p 80:8080 tag/image
+```
