@@ -1,7 +1,5 @@
 FROM debian:bullseye-slim as zabbix
 
-ARG ZBXPASSWD
-
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt update && \
@@ -32,16 +30,6 @@ RUN dpkg -i zabbix-release_6.0-5+debian11_all.deb && \
     locale-gen ja_JP.UTF-8 && \
     echo 'export LANG=ja_JP.UTF-8' >> ~/.bashrc && \
     source ~/.bashrc
-
-RUN service postgresql start && \
-    sudo -u postgres psql -c "create user zabbix" && \
-    sudo -u postgres psql -c "alter user zabbix with password '$ZBXPASSWD'" && \
-    sudo -u postgres psql -c "create database zabbix" && \
-    sudo -u postgres psql -c "alter database zabbix owner to zabbix" && \
-    zcat /usr/share/zabbix-sql-scripts/postgresql/server.sql.gz | \
-    su zabbix -s /bin/bash -c psql zabbix && \
-    echo "DBPassword=$ZBXPASSWD" >> /etc/zabbix/zabbix_server.conf && \
-    sed -ie s/^#// /etc/zabbix/nginx.conf
 
 COPY --chmod=755 entrypoint.sh /entrypoint.sh
 
