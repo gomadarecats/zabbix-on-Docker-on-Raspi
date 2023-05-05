@@ -1,0 +1,25 @@
+version: '3'
+services:
+  postgres:
+    build:
+      context: ./postgres
+    image: gomadarecats/postgres
+    volumes:
+      - "postgres:/var/lib/postgresql/data"
+    ports:
+      - "5432:5432"
+    environment:
+      ZBXPASSWD: $ZBXPASSWD
+
+  zabbix:
+    build:
+      context: ./zabbix
+    image: gomadarecats/zabbix
+    ports:
+      - "8080:8080"
+    environment:
+      ZBXPASSWD: $ZBXPASSWD
+
+volumes:
+  postgres:
+    external: true
